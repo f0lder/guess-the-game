@@ -57,6 +57,7 @@ export default function Home() {
 	const [win, setWin] = useState(false);
 	const [lose, setLose] = useState(false);
 	const [hints, setHints] = useState<string[]>([]);
+	const [fisrttry, setFirstTry] = useState(false);
 
 	useEffect(() => {
 		const fetchRandomGame = async () => {
@@ -181,7 +182,7 @@ export default function Home() {
 						{randomGame.short_screenshots.map((screenshot, index) => (
 							<button
 								key={screenshot.id}
-								className={`btn p-3 m-2 w-12 h-12${index === currentImageIndex ? ' btn-primary' : ''}`}
+								className={`btn p-3 m-2 w-12 h-12${index === currentImageIndex ? ' btn-primary' : ''} ${fisrttry ? 'btn-success' : ''}`}
 								onClick={() => setCurrentImageIndex(index)}
 								disabled={index >= disabledIndex && !win}>
 								{index + 1}
@@ -196,20 +197,29 @@ export default function Home() {
 							Skip
 						</button>
 					</div>
-					<div>
+					
 						{win && (
 							<div className="flex items-center justify-center mt-4">
 								<button className="btn btn-success">You win: {randomGame.name}</button>
 							</div>
 						)}
-					</div>
-					<div>
+					
+					
 						{lose && (
 							<div className="flex items-center justify-center mt-4">
 								<button className="btn btn-error">You lose. The game was {randomGame.name}</button>
 							</div>
 						)}
-					</div>
+						{ (win || lose) && (
+							<button 
+								className="btn btn-outline mt-4"
+								onClick={() => {
+									window.location.reload();
+								}}
+							>New game?</button>
+						)
+						}
+					
 				</div>
 
 			)}
@@ -240,7 +250,12 @@ export default function Home() {
 								<button
 									className="btn p-3 m-2 w-full"
 									onClick={() => {
+										setSearch('');
 										if (game.name === randomGame?.name) {
+											console.log(disabledIndex);
+											if(disabledIndex === 1){
+												setFirstTry(true);
+											}
 											setWin(true);
 										} else {
 											handleSkip(game.name ?? "Skipped");
