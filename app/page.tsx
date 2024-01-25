@@ -88,7 +88,7 @@ export default function Home() {
 			fetchData(search, "1");
 		}
 
-	}, [debouncedSearch]);
+	}, [debouncedSearch,search]);
 
 
 	useEffect(() => {
@@ -213,7 +213,7 @@ export default function Home() {
 				</div>
 				<div className="flex flex-col items-center mt-3 w-full">
 					{skips.map((skip, index) => (
-						<div className="btn btn-warning m-1 w-1/3">{skip}</div>
+						<div key={index} className="btn btn-warning m-1 w-1/3">{skip}</div>
 					))}
 				</div>
 			</div>

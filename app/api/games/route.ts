@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: Request, res: NextApiResponse) {
 
     let search ='';
     let page ='';
 
     if (req.url) {
-        const url = new URL(req.url, `http://${req.headers.host}`);
+        const url = new URL(req.url, `http://${req.url}`);
         search = url.searchParams.get('search') || '';
 
         page = url.searchParams.get('page') || '';
