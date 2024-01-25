@@ -126,7 +126,7 @@ export default function Home() {
 
 			{randomGame && (
 				<div className="flex flex-col justify-center items-center">
-					<div role="alert" className="alert alert-warning m-2 w-1/3">
+					<div role="alert" className="alert alert-warning m-2 w-96 sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/3">
 						<svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
 						<span>Warning: Slow loading due to low server resources!</span>
 					</div>
@@ -143,7 +143,9 @@ export default function Home() {
 							width={1000}
 							height={1000}
 							style={{ maxHeight: '1000px', width: "1000px" }}
-							quality={70}
+							blurDataURL="data:image/png;base64,..."
+							placeholder="blur"
+							quality={50}
 							onLoad={() => setLoadingGame(false)}
 						/>
 						{loadingGame && (
@@ -153,7 +155,7 @@ export default function Home() {
 						)}
 					</div>
 
-					<div className="flex items-center justify-center">
+					<div>
 						{randomGame.short_screenshots.map((screenshot, index) => (
 							<button
 								key={screenshot.id}
@@ -194,12 +196,12 @@ export default function Home() {
 				<input
 					type="text"
 					placeholder="Search for a game"
-					className="input input-bordered w-1/3 mb-3"
+					className="input input-bordered w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4"
 					value={search}
 					onChange={handleInput}
 					disabled={win || lose}
 				/>
-				<div className="w-1/3">
+				<div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4">
 					{loading ? (
 						<div className="">
 							<div className="btn skeleton w-full p-3 m-2"></div>
@@ -229,7 +231,7 @@ export default function Home() {
 				</div>
 				<div className="flex flex-col items-center mt-3 w-full">
 					{skips.map((skip, index) => (
-						<div key={index} className="btn btn-warning m-1 w-1/3">{skip}</div>
+						<div key={index} className="btn btn-warning m-1 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4">{skip}</div>
 					))}
 				</div>
 			</div>
