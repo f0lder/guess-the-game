@@ -121,6 +121,7 @@ export default function Home() {
 			<Menu />
 
 			{randomGame && (
+				console.log(randomGame),
 				<div>
 					<div className="flex items-center justify-center m-3">
 						{DEBUG && (
@@ -131,7 +132,7 @@ export default function Home() {
 
 						<Image
 							src={randomGame.short_screenshots[currentImageIndex].image}
-							alt={randomGame.name}
+							alt={"guess"}
 							width={1000}
 							height={1000}
 							style={{ maxHeight: '1000px', width: "auto" }}
@@ -182,6 +183,7 @@ export default function Home() {
 					className="input input-bordered w-1/3 mb-3"
 					value={search}
 					onChange={handleInput}
+					disabled={win || lose}
 				/>
 				<div className="w-1/3">
 					{loading ? (
@@ -193,7 +195,7 @@ export default function Home() {
 							<div className="btn skeleton w-full p-3 m-2"></div>
 						</div>
 					) : (
-						search && data && data.results && data.results.map((game) => (
+						!(win || lose) && search && data && data.results && data.results.map((game) => (
 							<div key={game.id}>
 								<button
 									className="btn p-3 m-2 w-full"
