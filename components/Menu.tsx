@@ -7,7 +7,7 @@ const Menu = () => {
                 </div>
                 <div className="flex-none">
                     <ul className="menu menu-horizontal px-1">
-                        <li><a>Link</a></li>
+                        <li><a href="/about">About</a></li>
                         <li>
                             <details>
                                 <summary>

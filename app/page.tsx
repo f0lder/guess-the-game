@@ -36,7 +36,7 @@ export default function Home() {
 	const [search, setSearch] = useState('');
 	const [debouncedSearch, setDebouncedSearch] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [loadingGame, setLoadingGame] = useState(false);
+	const [loadingGame, setLoadingGame] = useState(true);
 	const [randomGame, setRandomGame] = useState<Game | null>(null);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const [disabledIndex, setDisabledIndex] = useState(1);
@@ -116,14 +116,21 @@ export default function Home() {
 		 }
 	};
 
+	useEffect(() => {
+		setLoadingGame(true);
+	},[]);
+
 	return (
 		<div>
 			<Menu />
 
 			{randomGame && (
-				console.log(randomGame),
-				<div>
-					<div className="flex items-center justify-center m-3">
+				<div className="flex flex-col justify-center items-center">
+					<div role="alert" className="alert alert-warning m-2 w-1/3">
+						<svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+						<span>Warning: Slow loading due to low server resources!</span>
+					</div>
+					<div className="flex justify-center m-3 overflow-hidden">
 						{DEBUG && (
 							<div>
 								{randomGame.name}
@@ -135,10 +142,17 @@ export default function Home() {
 							alt={"guess"}
 							width={1000}
 							height={1000}
-							style={{ maxHeight: '1000px', width: "auto" }}
+							style={{ maxHeight: '1000px', width: "1000px" }}
 							quality={70}
+							onLoad={() => setLoadingGame(false)}
 						/>
+						{loadingGame && (
+							<div className="flex justify-center">
+								<div className="skeleton h-52 w-full"></div>
+							</div>
+						)}
 					</div>
+
 					<div className="flex items-center justify-center">
 						{randomGame.short_screenshots.map((screenshot, index) => (
 							<button
@@ -150,7 +164,7 @@ export default function Home() {
 							</button>
 						))}
 						<button
-							className="btn btn-warning p-3 m-2 w-12 h-12"
+							className="btn btn-secondary p-3 m-2 w-12 h-12"
 							onClick={() => handleSkip("Skipped")}
 							disabled={disabledIndex >= randomGame.short_screenshots.length || win}
 
@@ -161,14 +175,14 @@ export default function Home() {
 					<div>
 						{win && (
 							<div className="flex items-center justify-center mt-4">
-								<button className="btn btn-success w-1/3">You win: {randomGame.name}</button>
+								<button className="btn btn-success">You win: {randomGame.name}</button>
 							</div>
 						)}
 					</div>
 					<div>
 						{lose && (
 							<div className="flex items-center justify-center mt-4">
-								<button className="btn btn-error w-1/3">You lose. The game was {randomGame.name}</button>
+								<button className="btn btn-error">You lose. The game was {randomGame.name}</button>
 							</div>
 						)}
 					</div>
