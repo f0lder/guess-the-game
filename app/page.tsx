@@ -50,6 +50,10 @@ type Game = {
 
 export default function Home() {
 
+	useEffect(() => {
+		document.body.dataset.theme = 'dark';
+	}, []);
+
 	const DEBUG = false;
 
 	const [data, setData] = useState<Data | null>(null);
