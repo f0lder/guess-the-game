@@ -12,7 +12,15 @@ export async function GET(req: Request, res: NextApiResponse) {
 
         const data = await response.json();
 
-        const game= data.results[randomInt(0, 4)];
+        const game = data.results[randomInt(0, 4)];
+
+        const id = game.id;
+
+        const screans= await fetch(`https://api.rawg.io/api/games/${encodeURIComponent(id)}/screenshots?token&key=dc8770cecd274c2dbf0ee2f021df72e2`);
+
+        const screansData = await screans.json();
+
+        game.screenshots = screansData.results;
 
         return NextResponse.json({ data: game }, { status: 200 });
     }

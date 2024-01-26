@@ -25,6 +25,12 @@ type Game = {
 		id: number;
 		image: string;
 	}[];
+	screenshots: {
+		id: number;
+		image: string;
+		width: number;
+		height: number;
+	}[];
 	metacritic: number; // hint 1
 	playtime: number; //hint 2
 	released: string; //hint 3
@@ -118,7 +124,7 @@ export default function Home() {
 
 
 	useEffect(() => {
-		if (randomGame && disabledIndex >= randomGame.short_screenshots.length) {
+		if (randomGame && disabledIndex >= randomGame.screenshots.length) {
 			setLose(true);
 		}
 	}, [randomGame, disabledIndex, lose]);
@@ -133,7 +139,7 @@ export default function Home() {
 	};
 
 	const handleSkip = (message: string) => {
-		if (currentImageIndex < (randomGame?.short_screenshots.length ?? 0)) {
+		if (currentImageIndex < (randomGame?.screenshots.length ?? 0)) {
 			setDisabledIndex(disabledIndex + 1);
 			setCurrentImageIndex(disabledIndex);
 			setSkips([...skips, message]);
@@ -162,12 +168,13 @@ export default function Home() {
 
 						<div>
 							<Image
-								src={randomGame.short_screenshots[currentImageIndex].image}
+								src={randomGame.screenshots[currentImageIndex].image}
 								alt={"guess"}
-								width={1000}
-								height={1000}
+								width={randomGame.screenshots[currentImageIndex].width}
+								height={randomGame.screenshots[currentImageIndex].height}
 								quality={50}
 								unoptimized={true}
+								priority={true}
 							/>
 							{hints && (
 									<p className="bg-primary text-white dark:text-black text-center">{hints[currentImageIndex]}</p>
@@ -177,7 +184,7 @@ export default function Home() {
 					</div>
 
 					<div>
-						{randomGame.short_screenshots.map((screenshot, index) => (
+						{randomGame.screenshots.map((screenshot, index) => (
 							<button
 								key={screenshot.id}
 								className={`btn p-3 m-2 w-12 h-12${index === currentImageIndex ? ' btn-primary' : ''} ${fisrttry ? 'btn-success' : ''}`}
@@ -189,7 +196,7 @@ export default function Home() {
 						<button
 							className="btn btn-secondary p-3 m-2 w-12 h-12"
 							onClick={() => handleSkip("Skipped picture number " + (currentImageIndex + 1))}
-							disabled={disabledIndex >= randomGame.short_screenshots.length || win}
+							disabled={disabledIndex >= randomGame.screenshots.length || win}
 
 						>
 							Skip
