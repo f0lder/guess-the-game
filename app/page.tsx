@@ -166,13 +166,11 @@ export default function Home() {
 								alt={"guess"}
 								width={1000}
 								height={1000}
-								style={{ maxHeight: '1000px', width: "1000px" }}
-								blurDataURL="data:image/png;base64,..."
-								placeholder="blur"
 								quality={50}
+								unoptimized={true}
 							/>
 							{hints && (
-									<p className="bg-primary text-black text-center">{hints[currentImageIndex]}</p>
+									<p className="bg-primary text-white dark:text-black text-center">{hints[currentImageIndex]}</p>
 							)}
 						</div>
 						
