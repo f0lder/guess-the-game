@@ -5,7 +5,7 @@ export default function About() {
         
         <div>
             <Menu />
-            <div className="mx-72">
+            <div className="flex flex-col justify-center items-center">
                 <div>
                     <p className="text-4xl font-bold m-2">Despre aplicatie</p>
                     <p className="m-2">
