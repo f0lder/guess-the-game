@@ -6,17 +6,19 @@ export async function GET(req: Request, res: NextApiResponse) {
 
     if (req.url) {
 
-        const page = randomInt(1, 100);
+        const page = randomInt(1, 1000);
 
-        const response = await fetch(`https://api.rawg.io/api/games?token&key=dc8770cecd274c2dbf0ee2f021df72e2&page=${encodeURIComponent(page)}&page_size=5`);
+        const key = process.env.KEY;
+
+        const response = await fetch(`https://api.rawg.io/api/games?token&key=${key}&page=${encodeURIComponent(page)}&page_size=1`);
 
         const data = await response.json();
 
-        const game = data.results[randomInt(0, 4)];
+        const game = data.results[0];
 
         const id = game.id;
 
-        const screans= await fetch(`https://api.rawg.io/api/games/${encodeURIComponent(id)}/screenshots?token&key=dc8770cecd274c2dbf0ee2f021df72e2`);
+        const screans= await fetch(`https://api.rawg.io/api/games/${encodeURIComponent(id)}/screenshots?token&key=${key}`);
 
         const screansData = await screans.json();
 

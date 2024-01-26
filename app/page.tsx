@@ -90,7 +90,7 @@ export default function Home() {
 					d.data.released ? `Released: ${d.data.released}` : '',
 					d.data.esrb_rating ? `ESRB Rating: ${d.data.esrb_rating.name}` : '',
 					d.data.platforms ? `Platforms: ${d.data.platforms.map((p: { platform: { name: string } }) => p.platform.name).join(', ')}` : '',
-					d.data.tags ? `Tags: ${d.data.tags[0].name} ${d.data.tags[1].name} ${d.data.tags[2].name} ${d.data.tags[4].name} ${d.data.tags[5].name}` : '',
+					"",
 				])
 			}
 			

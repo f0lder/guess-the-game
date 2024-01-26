@@ -10,9 +10,11 @@ export async function GET(req: Request, res: NextApiResponse) {
         const url = new URL(req.url, `http://${req.url}`);
         search = url.searchParams.get('search') || '';
 
+        const key = process.env.KEY;
+
         page = url.searchParams.get('page') || '';
 
-        const response = await fetch(`https://api.rawg.io/api/games?token&key=dc8770cecd274c2dbf0ee2f021df72e2&page=${encodeURIComponent(page)}&page_size=5&search=${encodeURIComponent(search)}`);
+        const response = await fetch(`https://api.rawg.io/api/games?token&key=${key}&page=${encodeURIComponent(page)}&page_size=5&search=${encodeURIComponent(search)}`);
 
         const data = await response.json();
 
