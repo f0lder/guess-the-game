@@ -170,8 +170,8 @@ export default function Home() {
 							<Image
 								src={randomGame.screenshots[currentImageIndex].image}
 								alt={"guess"}
-								width={randomGame.screenshots[currentImageIndex].width}
-								height={randomGame.screenshots[currentImageIndex].height}
+								width={randomGame.screenshots[currentImageIndex].width/3}
+								height={randomGame.screenshots[currentImageIndex].height/3}
 								quality={50}
 								unoptimized={true}
 								priority={true}
