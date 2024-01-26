@@ -16,7 +16,7 @@ const Menu = () => {
                 </div>
                 <div className="flex-none">
                     <ul className="menu menu-horizontal px-1">
-                        <li>
+                        <li className='hidden md:block'>
                             <label className="swap swap-rotate">
 
                                 {/* this hidden checkbox controls the state */}
@@ -35,9 +35,9 @@ const Menu = () => {
                             </label>
                         </li>
                         <li><a href="/about">About</a></li>
+                        <li><a href="/scoreboard">Scoreboard</a></li>
 
-
-                        <li>
+                        <li className='hidden'>
                             <details>
                                 <summary>
                                     Parent

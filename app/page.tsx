@@ -50,10 +50,6 @@ type Game = {
 
 export default function Home() {
 
-	useEffect(() => {
-		document.body.dataset.theme = 'dark';
-	}, []);
-
 	const DEBUG = false;
 
 	const [data, setData] = useState<Data | null>(null);
@@ -68,6 +64,29 @@ export default function Home() {
 	const [lose, setLose] = useState(false);
 	const [hints, setHints] = useState<string[]>([]);
 	const [fisrttry, setFirstTry] = useState(false);
+
+	const [wonGames, setWonGames] = useState(() => Number(localStorage.getItem('wonGames') || 0));
+	const [lostGames, setLostGames] = useState(() => Number(localStorage.getItem('lostGames') || 0));
+
+	useEffect(() => {
+		localStorage.setItem('wonGames', String(wonGames));
+	}, [wonGames]);
+
+	useEffect(() => {
+		localStorage.setItem('lostGames', String(lostGames));
+	}, [lostGames]);
+
+	useEffect(() => {
+		if (win) {
+			setWonGames(wonGames => wonGames + 1);
+		}
+	}, [win]);
+
+	useEffect(() => {
+		if (lose) {
+			setLostGames(lostGames => lostGames + 1);
+		}
+	}, [lose]);
 
 	useEffect(() => {
 		const fetchRandomGame = async () => {
