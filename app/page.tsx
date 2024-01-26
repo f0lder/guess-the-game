@@ -1,6 +1,4 @@
 "use client";
-
-
 //TODO: random zoom on image to make it harder to see
 
 import Image from "next/image";
@@ -65,26 +63,17 @@ export default function Home() {
 	const [hints, setHints] = useState<string[]>([]);
 	const [fisrttry, setFirstTry] = useState(false);
 
-	const [wonGames, setWonGames] = useState(() => Number(localStorage.getItem('wonGames') || 0));
-	const [lostGames, setLostGames] = useState(() => Number(localStorage.getItem('lostGames') || 0));
-
-	useEffect(() => {
-		localStorage.setItem('wonGames', String(wonGames));
-	}, [wonGames]);
-
-	useEffect(() => {
-		localStorage.setItem('lostGames', String(lostGames));
-	}, [lostGames]);
-
 	useEffect(() => {
 		if (win) {
-			setWonGames(wonGames => wonGames + 1);
+			const wonGamesFromStorage = Number(window.localStorage.getItem('wonGames') || 0);
+			window.localStorage.setItem('wonGames', String(wonGamesFromStorage + 1));
 		}
 	}, [win]);
 
 	useEffect(() => {
 		if (lose) {
-			setLostGames(lostGames => lostGames + 1);
+			const lostGamesFromStorage = Number(window.localStorage.getItem('lostGames') || 0);
+			window.localStorage.setItem('lostGames', String(lostGamesFromStorage + 1));
 		}
 	}, [lose]);
 

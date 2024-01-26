@@ -4,6 +4,7 @@ import Menu from "@/components/Menu"
 import { useState, useEffect } from "react"
 
 export default function Scoreboard() {
+
     const [wonGames, setWonGames] = useState(0)
     const [lostGames, setLostGames] = useState(0)
     const [loading, setLoading] = useState(true)
@@ -14,10 +15,12 @@ export default function Scoreboard() {
         setLoading(false)
     }, [])
 
+    
+
     if(loading) return (
         <div>
             <Menu />
-            <p className="text-center text-2xl p-3">My Score</p>
+            <p className="text-center text-2xl p-3">Loading score...</p>
             <div className="flex justify-center items-center">
                 <div className="flex w-3/4">
                     <div className="grid flex-grow skeleton h-20 place-items-center text-green-500"></div>
