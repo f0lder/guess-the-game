@@ -40,7 +40,9 @@ export default function Scoreboard() {
                     <div className="divider divider-horizontal"></div>
                     <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center text-red-500">{lostGames}</div>
                     <div className="divider divider-horizontal"></div>
-                    <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center text-gray-300">{wonGames / lostGames ?? 0} W/L</div>
+                    <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center text-gray-300">{
+                        lostGames == 0 ? 0 : (wonGames / lostGames).toFixed(2)
+                    } W/L</div>
                 </div>
             </div>
         </div>
