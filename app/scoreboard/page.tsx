@@ -15,17 +15,15 @@ export default function Scoreboard() {
         setLoading(false)
     }, [])
 
-    
 
-    if(loading) return (
+
+    if (loading) return (
         <div>
             <Menu />
             <p className="text-center text-2xl p-3">Loading score...</p>
             <div className="flex justify-center items-center">
-                <div className="flex w-3/4">
-                    <div className="grid flex-grow skeleton h-20 place-items-center text-green-500"></div>
-                    <div className="divider divider-horizontal"></div>
-                    <div className="grid flex-grow skeleton h-20 place-items-center text-red-500"></div>
+                <div className="w-3/4">
+                    <div className="btn skeleton h-20 w-full"></div>
                 </div>
             </div>
         </div>
@@ -41,6 +39,8 @@ export default function Scoreboard() {
                     <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center text-green-500">{wonGames}</div>
                     <div className="divider divider-horizontal"></div>
                     <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center text-red-500">{lostGames}</div>
+                    <div className="divider divider-horizontal"></div>
+                    <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center text-gray-300">{wonGames / lostGames ?? 0} W/L</div>
                 </div>
             </div>
         </div>
