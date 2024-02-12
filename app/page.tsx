@@ -2,7 +2,7 @@
 //TODO: random zoom on image to make it harder to see
 
 import Image from "next/image";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import Menu from "@/components/Menu";
 
 type Data = {
