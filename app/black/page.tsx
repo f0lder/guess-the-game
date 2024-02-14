@@ -133,8 +133,6 @@ export default function Black() {
                     <h1 className="text-4xl text-center">Your Hand</h1>
 
                     <div className="flex flex-wrap">
-
-
                         {Array.from({ length: cardnumber }, (_, i) => i + 1).map((i) => (
                             <input key={i} min="1" max="21" name={`card${i}`} type="number" placeholder={`Card ${i}`} className="input input-bordered text-2xl h-20 m-2 text-center"
                                 onInput={event => handleInputChange(i, event)}
