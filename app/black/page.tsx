@@ -38,16 +38,16 @@ export default function Black() {
     }
 
     let double: TableData = {
-        2: { 2: 'P/H', 3: 'P/H', 4: 'P', 5: 'P', 6: 'P', 7: 'P', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
-        3: { 2: 'P/H', 3: 'P/H', 4: 'P', 5: 'P', 6: 'P', 7: 'P', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
+        2: { 2: 'P/H', 3: 'P/H', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'Split', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
+        3: { 2: 'P/H', 3: 'P/H', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'Split', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
         4: { 2: 'H', 3: 'H', 4: 'H', 5: 'P/H', 6: 'P/H', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
         5: { 2: 'D/H', 3: 'D/H', 4: 'D/H', 5: 'D/H', 6: 'D/H', 7: 'D/H', 8: 'D/H', 9: 'H', 10: 'H', 11: 'H' },
-        6: { 2: 'P/H', 3: 'P', 4: 'P', 5: 'P', 6: 'P', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
-        7: { 2: 'P', 3: 'P', 4: 'P', 5: 'P', 6: 'P', 7: 'P', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
-        8: { 2: 'P', 3: 'P', 4: 'P', 5: 'P', 6: 'P', 7: 'P', 8: 'P', 9: 'P', 10: 'P', 11: 'P' },
-        9: { 2: 'P', 3: 'P', 4: 'P', 5: 'P', 6: 'P', 7: 'S', 8: 'P', 9: 'P', 10: 'S', 11: 'S' },
+        6: { 2: 'P/H', 3: 'Split', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'H', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
+        7: { 2: 'Split', 3: 'Split', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'Split', 8: 'H', 9: 'H', 10: 'H', 11: 'H' },
+        8: { 2: 'Split', 3: 'Split', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'Split', 8: 'Split', 9: 'Split', 10: 'Split', 11: 'Split' },
+        9: { 2: 'Split', 3: 'Split', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'S', 8: 'Split', 9: 'Split', 10: 'S', 11: 'S' },
         10: { 2: 'S', 3: 'S', 4: 'S', 5: 'S', 6: 'S', 7: 'S', 8: 'S', 9: 'S', 10: 'S', 11: 'S' },
-        11: { 2: 'P', 3: 'P', 4: 'P', 5: 'P', 6: 'P', 7: 'P', 8: 'P', 9: 'P', 10: 'P', 11: 'P' },
+        1: { 2: 'Split', 3: 'Split', 4: 'Split', 5: 'Split', 6: 'Split', 7: 'Split', 8: 'Split', 9: 'Split', 10: 'Split', 11: 'Split' },
     }
 
     const [cardnumber, setCardnumber] = useState(2)
@@ -86,7 +86,7 @@ export default function Black() {
             }
         } else if (cards.length === 2 && cards[0] === cards[1]) {
             if (!double[cards[0]] || !double[cards[0]][dealer]) {
-                setChoise("Stand");
+                setChoise("S");
             } else {
                 setChoise(double[cards[0]][dealer]);
             }
@@ -119,7 +119,7 @@ export default function Black() {
         <>
             <Menu />
             <div>
-                {yourHand > 21 ? <p className="text-red-500">BUST</p> : <p className="text-green-500">Not BUST</p>}
+                {yourHand > 21 ? <p className="text-red-500">BUST</p> : <p className="text-green-500">NOT BUST</p>}
 
                 <p>Your hand:{yourHand}</p>
                 <p>Dealers hand:{dealer}</p>
@@ -144,7 +144,15 @@ export default function Black() {
                 <div className="flex flex-col w-1/3 m-2">
                     <h1 className="text-4xl text-center">Dealer</h1>
                     <input name="dealer" min="1" max="21" type="number" placeholder="Dealers hand" className="input input-bordered input-accent text-2xl h-20 m-2 text-center"
-                        onInput={event => setDealer(Number((event.target as HTMLInputElement).value))}
+
+                        onInput={event => {
+                            let v = Number((event.target as HTMLInputElement).value);
+                            if (v === 1) {
+                                v = 11;
+                            }
+                            setDealer(v);
+                        }
+                        }
                     />
                 </div>
 
