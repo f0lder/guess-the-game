@@ -286,9 +286,13 @@ export default function Home() {
 						</div>
 					)}
 					{skips.length > 0 && (
-						<div className="w-full mt-4 grid grid-flow-row gap-2">
-							<p className="text-center">Guess History</p>
-							{skips.map((skip, index) => (
+						<>
+							<div className="w-full grid grid-cols-3">
+								<div className="divider" />
+								<p className="text-center flex items-center justify-center">Guess History</p>
+								<div className="divider" />
+							</div>
+							{skips.map((skip) => (
 								<div
 									key={skip}
 									className="btn btn-outline w-full btn-warning pointer-events-none"
@@ -296,7 +300,7 @@ export default function Home() {
 									{skip}
 								</div>
 							))}
-						</div>
+						</>
 					)}
 					{!(win || lose) && (
 						<button
