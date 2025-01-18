@@ -49,6 +49,7 @@ type Game = {
 };
 
 export default function Home() {
+
 	const DEBUG = false;
 
 	const [data, setData] = useState<Data | null>(null);
@@ -166,7 +167,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="w-full h-screen">
+		<div className="w-full min-h-screen">
 			<Menu />
 
 			{randomGame && (
@@ -174,16 +175,15 @@ export default function Home() {
 					<div className="flex justify-center m-3 overflow-hidden">
 						{DEBUG && <div>{randomGame.name}</div>}
 
-						<div>
+						<div className="max-w-3xl">
 							<Image
 								src={randomGame.screenshots[currentImageIndex].image}
 								alt={"guess"}
 								width={randomGame.screenshots[currentImageIndex].width / 2}
 								height={randomGame.screenshots[currentImageIndex].height / 2}
 								quality={50}
-								unoptimized={true}
 								priority={true}
-								className="max-w-3xl"
+								className="w-fit"
 							/>
 							{hints && (
 								<p className="bg-primary text-white dark:text-black text-center text-xl">
