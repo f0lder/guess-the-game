@@ -3,8 +3,6 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import Menu from "@/components/Menu";
-
 type Data = {
 	count: number;
 	next: string;
@@ -167,22 +165,22 @@ export default function Home() {
 
 	return (
 		<div className="w-full min-h-screen">
-			<Menu />
-
-			{randomGame && (
+			{randomGame ? (
 				<div className="flex flex-col justify-center items-center max-w-xl mx-auto">
 					{DEBUG && <div>{randomGame.name}</div>}
 
 					<div className="max-w-3xl">
-						<Image
-							src={randomGame.screenshots[currentImageIndex].image}
-							alt={"guess"}
-							width={randomGame.screenshots[currentImageIndex].width / 2}
-							height={randomGame.screenshots[currentImageIndex].height / 2}
-							quality={50}
-							priority={true}
-							className="w-fit border border-gray-700"
-						/>
+						
+							<Image
+								src={randomGame.screenshots[currentImageIndex].image}
+								alt={"guess"}
+								width={randomGame.screenshots[currentImageIndex].width / 2}
+								height={randomGame.screenshots[currentImageIndex].height / 2}
+								quality={50}
+								priority={true}
+								className="w-fit border border-gray-700"
+							/>
+						
 						{hints && (
 							<p className="bg-primary text-white dark:text-black text-center text-xl">
 								{hints[currentImageIndex]}
@@ -286,10 +284,12 @@ export default function Home() {
 						</div>
 					)}
 					{skips.length > 0 && (
-						<>
+						<div className="grid grid-flow-row gap-2 w-full">
 							<div className="w-full grid grid-cols-3">
 								<div className="divider" />
-								<p className="text-center flex items-center justify-center">Guess History</p>
+								<p className="text-center flex items-center justify-center">
+									Guess History
+								</p>
 								<div className="divider" />
 							</div>
 							{skips.map((skip) => (
@@ -300,7 +300,7 @@ export default function Home() {
 									{skip}
 								</div>
 							))}
-						</>
+						</div>
 					)}
 					{!(win || lose) && (
 						<button
@@ -314,6 +314,10 @@ export default function Home() {
 							Give up?
 						</button>
 					)}
+				</div>
+			) : (
+				<div className="flex items-center justify-center w-full h-screen">
+					<div className="loading loading-spinner size-10" />
 				</div>
 			)}
 		</div>
