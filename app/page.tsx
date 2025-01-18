@@ -182,7 +182,7 @@ export default function Home() {
 								height={randomGame.screenshots[currentImageIndex].height / 2}
 								quality={50}
 								priority={true}
-								className="w-fit"
+								className="w-fit border border-gray-700"
 							/>
 							{hints && (
 								<p className="bg-primary text-white dark:text-black text-center text-xl">
@@ -255,6 +255,7 @@ export default function Home() {
 					/>
 				)}
 
+				{search.length > 0 && (
 				<div className="w-full border-b border-x border-gray-700">
 					{loading ? (
 						<div className="flex items-center justify-center m-5">
@@ -288,6 +289,7 @@ export default function Home() {
 						))
 					)}
 				</div>
+				)}
 				{skips.length > 0 && (
 					<div className="w-full mt-4 grid grid-flow-row gap-2">
 						<p className="text-center">Guess History</p>
