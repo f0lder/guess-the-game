@@ -170,29 +170,27 @@ export default function Home() {
 			<Menu />
 
 			{randomGame && (
-				<div className="flex flex-col justify-center items-center">
-					<div className="flex justify-center overflow-hidden">
-						{DEBUG && <div>{randomGame.name}</div>}
+				<div className="flex flex-col justify-center items-center max-w-xl mx-auto">
+					{DEBUG && <div>{randomGame.name}</div>}
 
-						<div className="max-w-3xl">
-							<Image
-								src={randomGame.screenshots[currentImageIndex].image}
-								alt={"guess"}
-								width={randomGame.screenshots[currentImageIndex].width / 2}
-								height={randomGame.screenshots[currentImageIndex].height / 2}
-								quality={50}
-								priority={true}
-								className="w-fit border border-gray-700"
-							/>
-							{hints && (
-								<p className="bg-primary text-white dark:text-black text-center text-xl">
-									{hints[currentImageIndex]}
-								</p>
-							)}
-						</div>
+					<div className="max-w-3xl">
+						<Image
+							src={randomGame.screenshots[currentImageIndex].image}
+							alt={"guess"}
+							width={randomGame.screenshots[currentImageIndex].width / 2}
+							height={randomGame.screenshots[currentImageIndex].height / 2}
+							quality={50}
+							priority={true}
+							className="w-fit border border-gray-700"
+						/>
+						{hints && (
+							<p className="bg-primary text-white dark:text-black text-center text-xl">
+								{hints[currentImageIndex]}
+							</p>
+						)}
 					</div>
 
-					<div className="max-w-xl mx-auto grid grid-cols-6 sm:grid-cols-7 gap-2 my-4">
+					<div className="w-full mx-auto grid sm:grid-flow-col gap-2 my-4">
 						{randomGame.screenshots.map((screenshot, index) => (
 							<button
 								type="button"
@@ -212,110 +210,108 @@ export default function Home() {
 							}
 							disabled={disabledIndex >= randomGame.screenshots.length || win}
 						>
-							Skip
+							SKIP
 						</button>
 					</div>
 
-					{win && (
-						<div className="flex items-center justify-center mt-4">
-							<button type="button" className="btn btn-success">
-								You win: {randomGame.name}
+					{(win || lose) && (
+						<div className="w-full grid grid-cols-1 md:grid-flow-col gap-2">
+							{win && (
+								<button type="button" className="btn btn-success">
+									You win: {randomGame.name}
+								</button>
+							)}
+
+							{lose && (
+								<button type="button" className="btn btn-error">
+									You lose. The game was {randomGame.name}
+								</button>
+							)}
+
+							<button
+								type="button"
+								className="btn btn-outline"
+								onClick={() => {
+									window.location.reload();
+								}}
+							>
+								New game?
 							</button>
 						</div>
 					)}
 
-					{lose && (
-						<div className="flex items-center justify-center mt-4">
-							<button type="button" className="btn btn-error">
-								You lose. The game was {randomGame.name}
-							</button>
+					{!(win || lose) && (
+						<input
+							type="text"
+							placeholder="Search for a game"
+							className="input input-bordered w-full rounded-none focus:outline-none"
+							value={search}
+							onChange={handleInput}
+						/>
+					)}
+
+					{search.length > 0 && (
+						<div className="w-full border-b border-x border-gray-700">
+							{loading ? (
+								<div className="flex items-center justify-center m-5">
+									<div className="loading loading-spinner size-10 mx-auto" />
+								</div>
+							) : (
+								!(win || lose) &&
+								search &&
+								data &&
+								data.results &&
+								data.results.map((game) => (
+									<button
+										key={game.id}
+										type="button"
+										className="p-1 rounded-none w-full text-left"
+										onClick={() => {
+											setSearch("");
+											if (game.name === randomGame?.name) {
+												console.log(disabledIndex);
+												if (disabledIndex === 1) {
+													setFirstTry(true);
+												}
+												setWin(true);
+											} else {
+												handleSkip(game.name ?? "Skipped");
+											}
+										}}
+									>
+										{game.name}
+									</button>
+								))
+							)}
 						</div>
 					)}
-					{(win || lose) && (
+					{skips.length > 0 && (
+						<div className="w-full mt-4 grid grid-flow-row gap-2">
+							<p className="text-center">Guess History</p>
+							{skips.map((skip, index) => (
+								<div
+									key={skip}
+									className="btn btn-outline w-full btn-warning pointer-events-none"
+								>
+									{skip}
+								</div>
+							))}
+						</div>
+					)}
+					{!(win || lose) && (
 						<button
 							type="button"
-							className="btn btn-outline mt-4"
+							className="btn btn-outline btn-error mt-4"
 							onClick={() => {
-								window.location.reload();
+								setDisabledIndex(randomGame?.screenshots.length ?? 0);
+								setLose(true);
 							}}
 						>
-							New game?
+							Give up?
 						</button>
 					)}
 				</div>
 			)}
-			<div className="flex flex-col items-center max-w-xl mx-auto">
-				{!(win || lose) && (
-					<input
-						type="text"
-						placeholder="Search for a game"
-						className="input input-bordered w-full rounded-none focus:outline-none"
-						value={search}
-						onChange={handleInput}
-					/>
-				)}
-
-				{search.length > 0 && (
-				<div className="w-full border-b border-x border-gray-700">
-					{loading ? (
-						<div className="flex items-center justify-center m-5">
-							<div className="loading loading-spinner size-10 mx-auto" />
-						</div>
-					) : (
-						!(win || lose) &&
-						search &&
-						data &&
-						data.results &&
-						data.results.map((game) => (
-							<button
-								key={game.id}
-								type="button"
-								className="p-1 rounded-none w-full text-left"
-								onClick={() => {
-									setSearch("");
-									if (game.name === randomGame?.name) {
-										console.log(disabledIndex);
-										if (disabledIndex === 1) {
-											setFirstTry(true);
-										}
-										setWin(true);
-									} else {
-										handleSkip(game.name ?? "Skipped");
-									}
-								}}
-							>
-								{game.name}
-							</button>
-						))
-					)}
-				</div>
-				)}
-				{skips.length > 0 && (
-					<div className="w-full mt-4 grid grid-flow-row gap-2">
-						<p className="text-center">Guess History</p>
-						{skips.map((skip, index) => (
-							<div
-								key={skip}
-								className="btn btn-outline w-full btn-warning pointer-events-none"
-							>
-								{skip}
-							</div>
-						))}
-					</div>
-				)}
-				{!(win || lose) && (
-					<button
-						type="button"
-						className="btn btn-outline btn-error mt-4"
-						onClick={() => {
-							setDisabledIndex(randomGame?.screenshots.length ?? 0);
-							setLose(true);
-						}}
-					>
-						Give up?
-					</button>
-				)}
-			</div>
 		</div>
 	);
 }
