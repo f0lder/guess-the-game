@@ -49,7 +49,6 @@ type Game = {
 };
 
 export default function Home() {
-
 	const DEBUG = false;
 
 	const [data, setData] = useState<Data | null>(null);
@@ -172,7 +171,7 @@ export default function Home() {
 
 			{randomGame && (
 				<div className="flex flex-col justify-center items-center">
-					<div className="flex justify-center m-3 overflow-hidden">
+					<div className="flex justify-center overflow-hidden">
 						{DEBUG && <div>{randomGame.name}</div>}
 
 						<div className="max-w-3xl">
@@ -193,23 +192,21 @@ export default function Home() {
 						</div>
 					</div>
 
-					<div className="flex flex-wrap flex-col sm:flex-row">
-						<div className="flex flex-wrap justify-center items-center">
-							{randomGame.screenshots.map((screenshot, index) => (
-								<button
-									type="button"
-									key={screenshot.id}
-									className={`btn p-3 m-2 w-12 h-12${index === currentImageIndex ? " btn-primary" : ""} ${fisrttry ? "btn-success" : ""}`}
-									onClick={() => setCurrentImageIndex(index)}
-									disabled={index >= disabledIndex && !win}
-								>
-									{index + 1}
-								</button>
-							))}
-						</div>
+					<div className="max-w-xl mx-auto grid grid-cols-6 sm:grid-cols-7 gap-2 my-4">
+						{randomGame.screenshots.map((screenshot, index) => (
+							<button
+								type="button"
+								key={screenshot.id}
+								className={`btn ${index === currentImageIndex ? " btn-primary" : ""} ${fisrttry ? "btn-success" : ""}`}
+								onClick={() => setCurrentImageIndex(index)}
+								disabled={index >= disabledIndex && !win}
+							>
+								{index + 1}
+							</button>
+						))}
 						<button
 							type="button"
-							className="btn btn-secondary p-3 m-2 w-full sm:w-12 h-12"
+							className="btn btn-secondary col-span-6 sm:col-span-1"
 							onClick={() =>
 								handleSkip(`Skipped picture number ${currentImageIndex + 1}`)
 							}
@@ -247,25 +244,21 @@ export default function Home() {
 					)}
 				</div>
 			)}
-			<div className="flex flex-col items-center mt-10">
+			<div className="flex flex-col items-center max-w-xl mx-auto">
 				{!(win || lose) && (
 					<input
 						type="text"
 						placeholder="Search for a game"
-						className="input input-bordered w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4"
+						className="input input-bordered w-full rounded-none focus:outline-none"
 						value={search}
 						onChange={handleInput}
 					/>
 				)}
 
-				<div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4">
+				<div className="w-full border-b border-x border-gray-700">
 					{loading ? (
-						<div className="">
-							<div className="btn skeleton w-full p-3 m-2" />
-							<div className="btn skeleton w-full p-3 m-2" />
-							<div className="btn skeleton w-full p-3 m-2" />
-							<div className="btn skeleton w-full p-3 m-2" />
-							<div className="btn skeleton w-full p-3 m-2" />
+						<div className="flex items-center justify-center m-5">
+							<div className="loading loading-spinner size-10 mx-auto" />
 						</div>
 					) : (
 						!(win || lose) &&
@@ -273,36 +266,35 @@ export default function Home() {
 						data &&
 						data.results &&
 						data.results.map((game) => (
-							<div key={game.id}>
-								<button
+							<button
+								key={game.id}
 								type="button"
-									className="btn p-3 m-2 w-full"
-									onClick={() => {
-										setSearch("");
-										if (game.name === randomGame?.name) {
-											console.log(disabledIndex);
-											if (disabledIndex === 1) {
-												setFirstTry(true);
-											}
-											setWin(true);
-										} else {
-											handleSkip(game.name ?? "Skipped");
+								className="p-1 rounded-none w-full text-left"
+								onClick={() => {
+									setSearch("");
+									if (game.name === randomGame?.name) {
+										console.log(disabledIndex);
+										if (disabledIndex === 1) {
+											setFirstTry(true);
 										}
-									}}
-								>
-									{game.name}
-								</button>
-							</div>
+										setWin(true);
+									} else {
+										handleSkip(game.name ?? "Skipped");
+									}
+								}}
+							>
+								{game.name}
+							</button>
 						))
 					)}
 				</div>
 				{skips.length > 0 && (
-					<div className="flex flex-col items-center mt-3 w-full p-2">
-						<p>Guess History</p>
+					<div className="w-full mt-4 grid grid-flow-row gap-2">
+						<p className="text-center">Guess History</p>
 						{skips.map((skip, index) => (
 							<div
 								key={skip}
-								className="btn btn-outline btn-warning m-2 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 pointer-events-none"
+								className="btn btn-outline w-full btn-warning pointer-events-none"
 							>
 								{skip}
 							</div>
@@ -311,7 +303,7 @@ export default function Home() {
 				)}
 				{!(win || lose) && (
 					<button
-					type="button"
+						type="button"
 						className="btn btn-outline btn-error mt-4"
 						onClick={() => {
 							setDisabledIndex(randomGame?.screenshots.length ?? 0);

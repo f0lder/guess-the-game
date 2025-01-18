@@ -15,26 +15,28 @@ const Menu = () => {
 	};
 
 	return (
-		<div className="navbar bg-base-100">
+		<div className="navbar bg-base-100 border-b border-gray-700 mb-4">
 			<div className="flex-1">
-				<a className="btn btn-ghost text-xl" href="/">
-					Guess the Game
-				</a>
-				<p className="w-full">
-					by{" "}
-					<a
-						className="underline text-primary"
-						href="https://f0lder.xyz/"
-						target="_blank"
-						rel="noreferrer"
-					>
-						f0lder
+				<div>
+					<a className="btn btn-ghost text-xl" href="/">
+						Guess the Game
 					</a>
-				</p>
+					<p className="text-sm">
+						by{" "}
+						<a
+							className="underline text-primary"
+							href="https://f0lder.xyz/"
+							target="_blank"
+							rel="noreferrer"
+						>
+							f0lder
+						</a>
+					</p>
+				</div>
 			</div>
 			<div className="flex-none">
 				<ul className="menu menu-horizontal px-1">
-					<li>
+					<li className="pointer-events-none">
 						<div className="bg-base-300 rounded-box place-items-center text-gray-300">
 							<span className=" text-green-500">{wonGames}</span> /
 							<span className=" text-red-500">{lostGames}</span> /
