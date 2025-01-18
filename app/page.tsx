@@ -13,6 +13,7 @@ type Data = {
 		background_image: string;
 	}[];
 };
+
 type Game = {
 	id: number;
 	name: string;
@@ -60,7 +61,7 @@ export default function Home() {
 	const [win, setWin] = useState(false);
 	const [lose, setLose] = useState(false);
 	const [hints, setHints] = useState<string[]>([]);
-	const [fisrttry, setFirstTry] = useState(false);
+	const [firstTry, setFirstTry] = useState(false);
 
 	useEffect(() => {
 		if (win) {
@@ -193,7 +194,7 @@ export default function Home() {
 							<button
 								type="button"
 								key={screenshot.id}
-								className={`btn ${index === currentImageIndex ? " btn-primary" : ""} ${fisrttry ? "btn-success" : ""}`}
+								className={`btn ${index === currentImageIndex ? " btn-primary" : ""} ${firstTry ? "btn-success" : ""}`}
 								onClick={() => setCurrentImageIndex(index)}
 								disabled={index >= disabledIndex && !win}
 							>
