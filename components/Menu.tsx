@@ -1,18 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
+import { readStats, STATS_EVENT } from "@/lib/stats";
+
 const Menu = () => {
-	const [theme, setTheme] = useState("dark");
-	const [wonGames, setWonGames] = useState(0);
-	const [lostGames, setLostGames] = useState(0);
+	const [stats, setStats] = useState({ won: 0, lost: 0 });
 
 	useEffect(() => {
-		setWonGames(Number(localStorage.getItem("wonGames") || 0));
-		setLostGames(Number(localStorage.getItem("lostGames") || 0));
+		const update = () => setStats(readStats());
+		update();
+		// same tab (game finished) and other tabs (storage event)
+		window.addEventListener(STATS_EVENT, update);
+		window.addEventListener("storage", update);
+		return () => {
+			window.removeEventListener(STATS_EVENT, update);
+			window.removeEventListener("storage", update);
+		};
 	}, []);
 
-	const toggleTheme = () => {
-		setTheme(theme === "light" ? "dark" : "light");
-	};
+	const total = stats.won + stats.lost;
+	const winRate = total === 0 ? "-" : `${Math.round((stats.won / total) * 100)}%`;
 
 	return (
 		<div className="navbar bg-base-100 border-b border-gray-700 mb-4">
@@ -37,12 +43,13 @@ const Menu = () => {
 			<div className="flex-none">
 				<ul className="menu menu-horizontal px-1">
 					<li className="pointer-events-none">
-						<div className="bg-base-300 rounded-box place-items-center text-gray-300">
-							<span className=" text-green-500">{wonGames}</span> /
-							<span className=" text-red-500">{lostGames}</span> /
-							<span>
-								{lostGames === 0 ? 0 : (wonGames / lostGames).toFixed(2)}
-							</span>
+						<div
+							className="bg-base-300 rounded-box place-items-center text-gray-300"
+							title="Won / Lost / Win rate"
+						>
+							<span className=" text-green-500">{stats.won}</span> /
+							<span className=" text-red-500">{stats.lost}</span> /
+							<span>{winRate}</span>
 						</div>
 					</li>
 				</ul>

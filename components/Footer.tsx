@@ -6,8 +6,8 @@ const Footer = () => {
 					<h1 className="text-4xl font-bold mb-2"> About this app</h1>
 					<p className="text-justify">
 						Guess the game is a simple game where you have to guess the game
-						based on the cover image. You can search for a game and then you
-						have to guess which game is the correct one. The game is made with
+						from its screenshots. Search for a game and pick your guess - every
+						wrong guess or skip reveals another screenshot and a hint. The game is made with
 						Next.js and Tailwind CSS by f0lder.
 					</p>
                     <p>
@@ -39,7 +39,8 @@ const Footer = () => {
 					<a
 						className="border border-blue-500 rounded p-1 text-center w-full"
 						href="https://github.com/f0lder/guess-the-game"
-						target="_black"
+						target="_blank"
+						rel="noreferrer"
 					>
 						f0lder/guess-the-game
 					</a>

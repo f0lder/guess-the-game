@@ -1,23 +1,42 @@
-import type { NextApiResponse } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { rawg } from "@/lib/rawg";
 
-export async function GET(req: Request, res: NextApiResponse) {
+export const dynamic = "force-dynamic";
 
-    let search ='';
-    let page ='';
+const PAGE_SIZE = 5;
 
-    if (req.url) {
-        const url = new URL(req.url, `http://${req.url}`);
-        search = url.searchParams.get('search') || '';
+type RawgSearch = {
+	count: number;
+	next: string | null;
+	results: { id: number; name: string }[];
+};
 
-        const key = process.env.KEY;
+export async function GET(req: NextRequest) {
+	const search = req.nextUrl.searchParams.get("search")?.trim() ?? "";
+	const pageParam = Number(req.nextUrl.searchParams.get("page") ?? 1);
+	const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
 
-        page = url.searchParams.get('page') || '';
+	if (!search) {
+		return NextResponse.json({ data: { count: 0, hasMore: false, results: [] } });
+	}
 
-        const response = await fetch(`https://api.rawg.io/api/games?token&key=${key}&page=${encodeURIComponent(page)}&page_size=5&search=${encodeURIComponent(search)}`);
+	try {
+		const data = await rawg<RawgSearch>("/games", {
+			search,
+			page,
+			page_size: PAGE_SIZE,
+		});
 
-        const data = await response.json();
-
-        return NextResponse.json({ data: data }, { status: 200 });
-    }
+		// Only forward what the client needs. RAWG's `next`/`previous` URLs contain the API key.
+		return NextResponse.json({
+			data: {
+				count: data.count,
+				hasMore: Boolean(data.next),
+				results: (data.results ?? []).map((g) => ({ id: g.id, name: g.name })),
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		return NextResponse.json({ error: "Search failed" }, { status: 502 });
+	}
 }
