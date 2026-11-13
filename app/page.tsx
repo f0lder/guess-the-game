@@ -2,8 +2,16 @@
 //TODO: random zoom on image to make it harder to see
 
 import Image from "next/image";
-import { useState, useEffect, useMemo, useRef } from "react";
-import { bumpStat } from "@/lib/stats";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { recordGame, type GameResult } from "@/lib/stats";
+import {
+	CURRENT_GAME_KEY,
+	clearCurrentGame,
+	loadCurrentGame,
+	parseProgress,
+	saveCurrentGame,
+	type GameProgress,
+} from "@/lib/currentGame";
 
 type SearchResult = {
 	id: number;
@@ -76,8 +84,27 @@ export default function Home() {
 
 	const gameOver = win || lose;
 	const totalImages = randomGame?.screenshots.length ?? 0;
+	const gameOverRef = useRef(false);
+	gameOverRef.current = gameOver;
 
+	const applyProgress = useCallback((p: GameProgress<Game>) => {
+		setRandomGame(p.game);
+		setUnlocked(p.unlocked);
+		setCurrentImageIndex(p.currentImageIndex);
+		setHistory(p.history);
+		setGuessedIds(p.guessedIds);
+	}, []);
+
+	// Resume the unfinished game if there is one, otherwise start a new one.
+	// A new game is only fetched after the previous one ended (won, lost or gave up),
+	// so reloading the page can't be used to skip a game without it counting as a loss.
 	useEffect(() => {
+		const saved = loadCurrentGame<Game>();
+		if (saved) {
+			applyProgress(saved);
+			return;
+		}
+
 		const controller = new AbortController();
 		(async () => {
 			try {
@@ -87,13 +114,47 @@ export default function Home() {
 				if (!res.ok) throw new Error(`HTTP ${res.status}`);
 				const d = await res.json();
 				if (!d.data?.screenshots?.length) throw new Error("No screenshots");
-				setRandomGame(d.data);
+				applyProgress({
+					game: d.data,
+					unlocked: 1,
+					currentImageIndex: 0,
+					history: [],
+					guessedIds: [],
+				});
 			} catch {
 				if (!controller.signal.aborted) setGameError(true);
 			}
 		})();
 		return () => controller.abort();
-	}, []);
+	}, [applyProgress]);
+
+	// Persist progress after every change while the game is running.
+	useEffect(() => {
+		if (!randomGame || gameOver) return;
+		saveCurrentGame<Game>({
+			game: randomGame,
+			unlocked,
+			currentImageIndex,
+			history,
+			guessedIds,
+		});
+	}, [randomGame, gameOver, unlocked, currentImageIndex, history, guessedIds]);
+
+	// Keep other tabs in sync, so guesses can't be "tested" in a second tab.
+	useEffect(() => {
+		const onStorage = (e: StorageEvent) => {
+			if (e.key !== CURRENT_GAME_KEY || gameOverRef.current) return;
+			const progress = parseProgress<Game>(e.newValue);
+			if (progress) {
+				applyProgress(progress);
+			} else {
+				// the game ended in another tab (already recorded there) - start a new one
+				window.location.reload();
+			}
+		};
+		window.addEventListener("storage", onStorage);
+		return () => window.removeEventListener("storage", onStorage);
+	}, [applyProgress]);
 
 	// Hint N is shown on screenshot N+1 (the first screenshot has no hint).
 	// Missing data is skipped so later screenshots still get a hint.
@@ -177,24 +238,41 @@ export default function Home() {
 		setDebouncedSearch("");
 	};
 
-	const endGame = (won: boolean) => {
-		if (gameOver) return;
+	// `guesses` is passed in because the `history` state may not be updated yet.
+	const endGame = (result: GameResult, guesses: string[]) => {
+		if (gameOver || !randomGame) return;
+		clearCurrentGame();
+		const won = result === "won";
+		const isFirstTry = won && unlocked === 1;
+
 		if (won) {
 			setWin(true);
-			bumpStat("wonGames");
+			setFirstTry(isFirstTry);
 		} else {
 			setUnlocked(totalImages);
 			setLose(true);
-			bumpStat("lostGames");
 		}
+
+		recordGame({
+			id: randomGame.id,
+			name: randomGame.name,
+			image: randomGame.background_image || randomGame.screenshots[0]?.image || null,
+			result,
+			imagesUsed: unlocked,
+			totalImages,
+			firstTry: isFirstTry,
+			guesses,
+			playedAt: new Date().toISOString(),
+		});
 	};
 
 	// A skip or a wrong guess: unlock the next screenshot, or lose if none are left.
 	const advance = (message: string) => {
 		if (gameOver || !randomGame) return;
-		setHistory((h) => [...h, message]);
+		const nextHistory = [...history, message];
+		setHistory(nextHistory);
 		if (unlocked >= totalImages) {
-			endGame(false);
+			endGame("lost", nextHistory);
 			return;
 		}
 		setCurrentImageIndex(unlocked);
@@ -204,8 +282,7 @@ export default function Home() {
 	const handleGuess = (game: SearchResult) => {
 		clearSearch();
 		if (game.id === randomGame?.id) {
-			if (unlocked === 1) setFirstTry(true);
-			endGame(true);
+			endGame("won", history);
 		} else {
 			setGuessedIds((ids) => [...ids, game.id]);
 			advance(game.name || "Unknown game");
@@ -372,7 +449,7 @@ export default function Home() {
 						<button
 							type="button"
 							className="btn btn-outline btn-error mt-4"
-							onClick={() => endGame(false)}
+							onClick={() => endGame("gave-up", history)}
 						>
 							Give up?
 						</button>

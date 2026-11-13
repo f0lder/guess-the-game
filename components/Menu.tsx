@@ -1,21 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { readStats, STATS_EVENT } from "@/lib/stats";
+import { readStats, subscribeStats } from "@/lib/stats";
 
 const Menu = () => {
 	const [stats, setStats] = useState({ won: 0, lost: 0 });
 
-	useEffect(() => {
-		const update = () => setStats(readStats());
-		update();
-		// same tab (game finished) and other tabs (storage event)
-		window.addEventListener(STATS_EVENT, update);
-		window.addEventListener("storage", update);
-		return () => {
-			window.removeEventListener(STATS_EVENT, update);
-			window.removeEventListener("storage", update);
-		};
-	}, []);
+	useEffect(() => subscribeStats(() => setStats(readStats())), []);
 
 	const total = stats.won + stats.lost;
 	const winRate = total === 0 ? "-" : `${Math.round((stats.won / total) * 100)}%`;
@@ -42,15 +32,16 @@ const Menu = () => {
 			</div>
 			<div className="flex-none">
 				<ul className="menu menu-horizontal px-1">
-					<li className="pointer-events-none">
-						<div
+					<li>
+						<a
+							href="/history"
 							className="bg-base-300 rounded-box place-items-center text-gray-300"
-							title="Won / Lost / Win rate"
+							title="Won / Lost / Win rate - click for game history"
 						>
 							<span className=" text-green-500">{stats.won}</span> /
 							<span className=" text-red-500">{stats.lost}</span> /
 							<span>{winRate}</span>
-						</div>
+						</a>
 					</li>
 				</ul>
 			</div>
